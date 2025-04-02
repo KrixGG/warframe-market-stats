@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Warframe Market Stats</title>
+</head>
+<body>
+  <h1>Akbolto Prime Set Stats</h1>
+  <div id="results">Loading...</div>
+
+  <script>
+    async function fetchData() {
+      try {
+        // Use your Vercel proxy URL
+        const response = await fetch('https://your-vercel-app.vercel.app/api/stats');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        displayResults(data);
+      } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("results").innerHTML = 
+          "Failed to load data. Open browser console (F12) for details.";
+      }
+    }
+
+    function displayResults(data) {
+      // Example: Display closed statistics
+      const stats = data.payload.statistics_closed['48hours'];
+      let html = "<h2>48-Hour Statistics</h2><ul>";
+      
+      stats.forEach(entry => {
+        html += `<li>${new Date(entry.datetime).toLocaleDateString()}: 
+                  Avg ${entry.avg_price} | Vol ${entry.volume}</li>`;
+      });
+      
+      html += "</ul>";
+      document.getElementById("results").innerHTML = html;
+    }
+
+    // Initial fetch
+    fetchData();
+  </script>
+</body>
+</html>
