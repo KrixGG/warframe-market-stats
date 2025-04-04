@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Warframe Market Stats</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    li { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Akbolto Prime Set Stats</h1>
+  <div id="results">Loading...</div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const response = await fetch('YOUR_VERCEL_PROXY_URL/api/stats');
+        const data = await response.json();
+        
+        // Display data
+        const stats = data.payload.statistics_closed['48hours'];
+        let html = "<h2>48-Hour Prices</h2><ul>";
+        
+        stats.forEach(entry => {
+          html += `<li>Date: ${new Date(entry.datetime).toLocaleDateString()} | Avg Price: ${entry.avg_price}</li>`;
+        });
+        
+        document.getElementById("results").innerHTML = html + "</ul>";
+      } catch (error) {
+        document.getElementById("results").innerHTML = "Failed to load data. Check console.";
+        console.error(error);
+      }
+    }
+    fetchData();
+  </script>
+</body>
+</html>
